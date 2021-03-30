@@ -1,6 +1,8 @@
 #ifndef STATEMANAGER_H
 #define STATEMANAGER_H
 #include "globals.h"
+#include "terminalmanip.h"
+#include <curses.h>
 #include <iostream>
 #include <QMap>
 #include <QString>

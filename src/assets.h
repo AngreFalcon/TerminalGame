@@ -2,6 +2,7 @@
 #define ASSETS_H
 #include "globals.h"
 #include "iohandling.h"
+#include <curses.h>
 #include <iostream>
 #include <QCoreApplication>
 #include <QFile>

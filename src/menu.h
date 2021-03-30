@@ -6,6 +6,7 @@
 #include "player.h"
 #include "statemanager.h"
 #include "terminalmanip.h"
+#include <curses.h>
 #include <iostream>
 #include <QMap>
 

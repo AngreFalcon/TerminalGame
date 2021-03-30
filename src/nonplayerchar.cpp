@@ -5,18 +5,23 @@ NonPlayerChar::NonPlayerChar(){
 }
 
 void NonPlayerChar::printCharacterInfo(bool desc){
+    std::string tempOutputString;
     //this is a debugging method used to print the player character's name to terminal
-    std::cout << "\n-------";
-    std::cout << "\nName: " << characterName_.toStdString();
-    std::cout << "\nSpecies: ";
+    printw("\n-------");
+    tempOutputString = "\nName: " + characterName_.toStdString(); printw(tempOutputString.data());
+    printw("\nSpecies: ");
     if (characterSpecies_ != "null") assetData->printPlayerSpecies(characterSpecies_);
-    else std::cout << makeStdString(characterSpeciesObject_["name"]);
-    std::cout << "\nLevel: " << characterLevel_;
+    else{
+        tempOutputString = makeStdString(characterSpeciesObject_["name"]); printw(tempOutputString.data());
+    }
+    tempOutputString = "\nLevel: " + std::to_string(characterLevel_); printw(tempOutputString.data());
     if (desc) {
-        std::cout << "\n-------\nDescription: \n";
+        printw("\n-------\nDescription: \n");
         if (characterSpecies_ != "null") assetData->printPlayerDescription(characterSpecies_);
-        else std::cout << makeStdString(characterSpeciesObject_["description"]);
-        std::cout << "\n-------";
+        else{
+            tempOutputString = makeStdString(characterSpeciesObject_["description"]); printw(tempOutputString.data());
+        }
+        printw("\n-------");
     }
     return;
 }

@@ -9,10 +9,12 @@ StateManager::StateManager(){
 
 
 void StateManager::setState(const QString &stateName, bool ignore){
-    if (DEBUG) std::cout << "\nSetting state to \"" << stateName.toStdString() << "\"\n";
+    std::string tempOutputString = "\nSetting state to \"" + stateName.toStdString() + "\"\n";
+    if (DEBUG) printw(tempOutputString.data());
     if (DEBUG) printPreviousStates();
     if (!stateList.contains(stateName)){
-        std::cout << "State \"" << stateName.toStdString() << "\" does not exist.\n";
+        std::string tempOutputString = "State \"" + stateName.toStdString() + "\" does not exist.\n";
+        printw(tempOutputString.data());
         return;
     }
     if (currentState != NULL && !ignore) currentState->exit();
@@ -21,6 +23,7 @@ void StateManager::setState(const QString &stateName, bool ignore){
     }
     currentState = &stateList[stateName];
     if (!ignore) currentState->enter();
+    clearTerm();
     return;
 }
 
@@ -33,7 +36,8 @@ void StateManager::mainLoop(){
 
 void StateManager::printPreviousStates(){
     for (int i = 0; i != previousStates.length(); i++){
-        std::cout << "\n" << previousStates[i].toStdString() << "\n";
+        std::string tempOutputString = "\n" + previousStates[i].toStdString() + "\n";
+        printw(tempOutputString.data());
     }
     return;
 }

@@ -1,6 +1,7 @@
 #ifndef TERMINALMANIP_H
 #define TERMINALMANIP_H
 #include "globals.h"
+#include <curses.h>
 #include <iostream>
 
 #if __has_include("windows.h")
@@ -9,7 +10,9 @@
 #include <sys/ioctl.h>
 #endif
 
-void resizeTerminalWindow();
+void scrollTerm();
+void clearTerm();
+bool resizeTerminalWindow();
 void returnSizeOfWindow(int (&windowMargins)[2]);
 
 #endif // TERMINALMANIP_H

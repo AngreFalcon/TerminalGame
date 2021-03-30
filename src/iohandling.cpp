@@ -2,71 +2,51 @@
 
 //source file containing exclusively input handling, including error checking and input validation
 
-int inputErrorNag(int a){
-    if (std::cin.fail()){
-        while(std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout << "\n---------------------\nYour input is invalid\n";
-            std::cin >> a;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        }
-        return a;
+int inputErrorNagInt(){
+    int a;
+    while (!(a = getch()) || !isdigit(a)){
+        printw("\n---------------------\nYour input is invalid\n");
+        flushinp();
     }
-    else{
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        return a;
-    }
+    clearTerm();
+    flushinp();
+    return a;
 }
-char inputErrorNag(char a){
-    if (std::cin.fail()){
-        while(std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout << "\n---------------------\nYour input is invalid\n";
-            std::cin >> a;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        }
-        return a;
+
+char inputErrorNagChar(){
+    char a;
+    while (!(a = getch()) || !isalpha(a)){
+        printw("\n---------------------\nYour input is invalid\n");
+        flushinp();
     }
-    else{
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        return a;
-    }
-}
-std::string inputErrorNag(std::string a){
-    if (std::cin.fail()){
-        while(std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-            std::cout << "\n---------------------\nYour input is invalid\n";
-            //std::getline(std::cin, a);
-            std::cin >> a;
-            std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        }
-        return a;
-    }
-    else{
-        std::cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
-        return a;
-    }
+    flushinp();
+    return a;
 }
 
 QString askInput(const std::string &a){
     bool retryInput;
     std::string tempUserValue;
-    char verify = 'y';
+    std::string tempOutputString;
+    char verify;
     do {
-        std::cout << a;
-        std::getline (std::cin, tempUserValue);
-        std::cout << "Is " << tempUserValue << " correct? Y/N" << std::endl;
-        std::cin >> verify;
-        verify = inputErrorNag(verify);
+        printw(a.data());
+        nocbreak();
+        echo();
+        while((verify = getch()) != '\n'){
+            tempUserValue.push_back(char(verify));
+        }
+        tempOutputString = "Is " + tempUserValue + " correct? Y/N\n";
+        printw(tempOutputString.data());
+        cbreak();
+        noecho();
+        verify = inputErrorNagChar();
         if (toupper(verify) == 'Y'){
             retryInput = false;
         }
         else {
             retryInput = true;
+            tempUserValue = "";
+            refresh();
         }
     } while (retryInput == true);
     return QString::fromStdString(tempUserValue);
@@ -85,11 +65,12 @@ std::string makeStdString(const QJsonValue &input, int caseType){
 }
 
 void dirCheck(const QString &fileLocation, const QString &terminalOutput){
+    std::string tempOutputString = "\nVerifying directory at \"" + QCoreApplication::applicationDirPath().toStdString() + fileLocation.toStdString() + "\"\n";
     //finds the directory the executable is currently running in, appends the /saves/ directory to the end of the string, and creates the folder if it doesn't already exist
     QDir dir(QCoreApplication::applicationDirPath() + fileLocation);
-    if (DEBUG) std::cout << "\nVerifying directory at \"" << QCoreApplication::applicationDirPath().toStdString() + fileLocation.toStdString() << "\"\n";
+    if (DEBUG) printw(tempOutputString.data());
     if (!dir.exists()){
-        std::cout << terminalOutput.toStdString();
+        tempOutputString = terminalOutput.toStdString(); printw(tempOutputString.data());
         dir.mkpath(".");
     }
     return;
@@ -98,7 +79,7 @@ void dirCheck(const QString &fileLocation, const QString &terminalOutput){
 bool ioSaveFile(const QString &fileLocation, const QString &terminalOutput, const QJsonObject &writeObject){
     QSaveFile saveFile(QCoreApplication::applicationDirPath() + fileLocation);
     if (!saveFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text)){
-        std::cout <<  terminalOutput.toStdString();
+        std::string tempOutputString = terminalOutput.toStdString(); printw(tempOutputString.data());
         return false;
     }
     QJsonDocument saveDoc(writeObject);
@@ -111,8 +92,8 @@ bool ioSaveFile(const QString &fileLocation, const QString &terminalOutput, cons
 QJsonObject ioLoadFile(const QString &fileLocation, const QString &terminalOutput){
     QFile loadFile(QCoreApplication::applicationDirPath() + fileLocation);
     if (!loadFile.open(QIODevice::ReadOnly)){
-        std::cout << fileLocation.toStdString();
-        std::cout << terminalOutput.toStdString();
+        std::string tempOutputString = fileLocation.toStdString(); printw(tempOutputString.data());
+        tempOutputString = terminalOutput.toStdString(); printw(tempOutputString.data());
     }
     QByteArray saveData = loadFile.readAll();
     QJsonDocument loadDoc(QJsonDocument::fromJson(saveData));
@@ -123,11 +104,11 @@ QJsonObject ioLoadFile(const QString &fileLocation, const QString &terminalOutpu
 void ioRemoveFile(const QString &fileLocation, const QString &terminalOutput){
     QFile removeFile(QCoreApplication::applicationDirPath() + fileLocation);
     if (!removeFile.open(QIODevice::ReadOnly)){
-        std::cout << "Could not find the save file for that character.\nPlease make sure you spelled the character's name right.\n";
+        printw("Could not find the save file for that character.\nPlease make sure you spelled the character's name right.\n");
     }
     else{
         removeFile.remove();
-        std::cout << terminalOutput.toStdString();
+        std::string tempOutputString = terminalOutput.toStdString(); printw(tempOutputString.data());
     }
     return;
 }

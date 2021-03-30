@@ -20,20 +20,22 @@ Character::Character(){
 void Character::equipItem(Inventory &playerInventory_){
     int userInput;
     QString userSelection;
-    std::cout << "\nChoose item to equip.\n";
+    printw("\nChoose item to equip.\n");
     if (playerInventory_.printUsableItems("equippable")){
-        std::cout << "\n"; std::cin >> userInput;
-        userInput = inputErrorNag(userInput) - 1;
+        printw("\n");
+        flushinp();
+        userInput = inputErrorNagInt() - 49;
         if (userInput < 0){
-            std::cout << "\nDidn't equip anything.";
+            printw("\nDidn't equip anything.");
             return;
         }
-        std::cout << "\n" << characterName_.toStdString() << " ";
+        std::string tempOutputString = "\n" + characterName_.toStdString() + " ";
+        printw(tempOutputString.data());
         playerInventory_.equippedItem(userInput, userSelection, characterEquippedItems_);
-        std::cout << ".";
+        printw(".");
     }
     else{
-        std::cout << "\nNo items to equip.";
+        printw("\nNo items to equip.");
         return;
     }
 }
@@ -41,50 +43,51 @@ void Character::equipItem(Inventory &playerInventory_){
 void Character::unequipItem(Inventory &playerInventory_){
     int userInput;
     QString inventoryKey;
-    std::cout << "\nChoose item to unequip.";
+    printw("\nChoose item to unequip.");
     printCharacterEquippedItems();
-    std::cout << "\nEnter 0 to cancel.\n\n";
-    std::cin >> userInput;
-    userInput = inputErrorNag(userInput) - 1;
+    printw("\nEnter 0 to cancel.\n\n");
+    flushinp();
+    userInput = inputErrorNagInt() - 49;
     if (userInput == -1){
-        std::cout << "\nDidn't unequip anything.";
+        printw("\nDidn't unequip anything.");
         return;
     }
     else if (userInput < -1 || userInput > equippedItemKeys_.size() - 1){
-        std::cout << "\nThat isn't a valid selection.";
+        printw("\nThat isn't a valid selection.");
         return;
     }
     else if (characterEquippedItems_[equippedItemKeys_[userInput]] == "null"){
-        std::cout << "\nNothing is equipped.";
+        printw("\nNothing is equipped.");
     }
     else{
         inventoryKey = characterEquippedItems_[equippedItemKeys_[userInput]];
         characterEquippedItems_[equippedItemKeys_[userInput]] = "null";
-        std::cout << "\n" << characterName_.toStdString();
+        std::string tempOutputString = "\n" + characterName_.toStdString();
+        printw(tempOutputString.data());
         playerInventory_.unequippedItem(inventoryKey);
-        std::cout << ".";
+        printw(".");
     }
     return;
 }
 
 void Character::useItem(Inventory &playerInventory_){
     int userInput;
-    std::cout << "\nChoose item to use.";
+    printw("\nChoose item to use.");
     if (playerInventory_.printUsableItems("consumable")){
-        std::cout << "\n\n";
-        std::cin >> userInput;
-        userInput = inputErrorNag(userInput);
-        userInput--;
+        printw("\n\n");
+        flushinp();
+        userInput = inputErrorNagInt() - 49;
         if (userInput < 0){
-            std::cout << "\nDidn't use anything.";
+            printw("\nDidn't use anything.");
             return;
         }
-        std::cout << "\n" << characterName_.toStdString();
+        std::string tempOutputString = "\n" + characterName_.toStdString();
+        printw(tempOutputString.data());
         playerInventory_.usedItem(userInput, characterStats_);
-        std::cout << ".";
+        printw(".");
     }
     else{
-        std::cout << "\nNo items to use.";
+        printw("\nNo items to use.");
         return;
     }
 }

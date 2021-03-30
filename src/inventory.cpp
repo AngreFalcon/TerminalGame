@@ -22,15 +22,18 @@ void Inventory::inventoryReadSaveData(const QString &characterName_){
 void Inventory::printPlayerInv(){
     //this is a method used to print the player character's inventory to terminal
     int menuIndex = 1;
-    std::cout << "\nInventory:";
+    printw("\nInventory:");
     for (QJsonObject::const_iterator invCount = playerInventoryMap_.begin(); invCount != playerInventoryMap_.end(); invCount++){
         QJsonObject invItem = playerInventoryMap_[invCount.key()].toObject();
-        std::cout << "\n-------\n" << menuIndex << ": Item Name: " << makeStdString(invItem["itemname"]) << "\nItem Count: " << invItem["itemcount"].toInt(); menuIndex++;
+        std::string tempOutputString = "\n-------\n" + std::to_string(menuIndex) + ": Item Name: " + makeStdString(invItem["itemname"]) + "\nItem Count: " + std::to_string(invItem["itemcount"].toInt());
+        printw(tempOutputString.data());
+        menuIndex++;
         invItem = invItem["itemattributes"].toObject();
         for (QJsonObject::const_iterator i = invItem.constBegin(); i != invItem.constEnd(); i++){
             QString attributeKey = i.key();
             attributeKey[0] = attributeKey[0].toUpper();
-            std::cout << "\n" << attributeKey.toStdString() << ": " << i.value().toInt();
+            std::string tempOutputString = "\n" + attributeKey.toStdString() + ": " + std::to_string(i.value().toInt());
+            printw(tempOutputString.data());
         }
     }
     return;
@@ -39,22 +42,23 @@ void Inventory::printPlayerInv(){
 bool Inventory::printUsableItems(const QString &itemBoolKey){
     int menuIndex = 1;
     playerUsableItemsArray_ = QStringList();
-    std::cout << "\nInventory:";
+    printw("\nInventory:");
     for (QJsonObject::const_iterator invCount = playerInventoryMap_.begin(); invCount != playerInventoryMap_.end(); invCount++){
         QJsonObject invItem = playerInventoryMap_[invCount.key()].toObject();
         if (invItem[itemBoolKey].toBool() && invItem["itemcount"].toInt() > 0){
             playerUsableItemsArray_.append(invCount.key());
-            std::cout << "\n-------\n" << menuIndex << ": Item Name: " << makeStdString(invItem["itemname"]) << "\nItem Count: " << invItem["itemcount"].toInt(); menuIndex++;
+            std::string tempOutputString = "\n-------\n" + std::to_string(menuIndex) + ": Item Name: " + makeStdString(invItem["itemname"]) + "\nItem Count: " + std::to_string(invItem["itemcount"].toInt()); menuIndex++;
+            printw(tempOutputString.data());
             invItem = invItem["itemattributes"].toObject();
             for (QJsonObject::const_iterator i = invItem.constBegin(); i != invItem.constEnd(); i++){
                 QString attributeKey = i.key();
                 attributeKey[0] = attributeKey[0].toUpper();
-                std::cout << "\n" << attributeKey.toStdString() << ": " << i.value().toInt();
+                tempOutputString = "\n" + attributeKey.toStdString() + ": " + std::to_string(i.value().toInt());
             }
         }
     }
     if (playerUsableItemsArray_.size() != 0){
-        std::cout << "\nEnter 0 to cancel.";
+        printw("\nEnter 0 to cancel.");
         return true;
     }
     else{
@@ -66,9 +70,10 @@ void Inventory::equippedItem(int invIndex, QString &userSelection, QMap<QString,
     if (invIndex < playerUsableItemsArray_.size()){
         QJsonObject inventoryItem = playerInventoryMap_[playerUsableItemsArray_[invIndex]].toObject();
         userSelection = playerUsableItemsArray_[invIndex];
-        std::cout << "equipped " << makeStdString(inventoryItem["itemname"]);
+        std::string tempOutputString = "equipped " + makeStdString(inventoryItem["itemname"]);
+        printw(tempOutputString.data());
         if (playerEquippedItems_[inventoryItem["itemtype"].toString()] != "null"){
-            std::cout << " and";
+            printw(" and");
             unequippedItem(playerEquippedItems_[inventoryItem["itemtype"].toString()]);
         }
         playerEquippedItems_[inventoryItem["itemtype"].toString()] = userSelection;
@@ -76,7 +81,7 @@ void Inventory::equippedItem(int invIndex, QString &userSelection, QMap<QString,
         return;
     }
     else {
-        std::cout << "\nYour selection was invalid.";
+        printw("\nYour selection was invalid.");
         return;
     }
 }
@@ -84,7 +89,8 @@ void Inventory::equippedItem(int invIndex, QString &userSelection, QMap<QString,
 void Inventory::unequippedItem(const QString &invIndex){
     addItem(invIndex, (1));
     QJsonObject inventoryItem = playerInventoryMap_[invIndex].toObject();
-    std::cout << " unequipped " << makeStdString(inventoryItem["itemname"]);
+    std::string tempOutputString = " unequipped " + makeStdString(inventoryItem["itemname"]);
+    printw(tempOutputString.data());
     return;
 }
 
@@ -97,7 +103,8 @@ void Inventory::usedItem(int invIndex, QMap<QString, int> &playerStats_){
         }
     }
     inventoryItem = playerInventoryMap_[playerUsableItemsArray_[invIndex]].toObject();
-    std::cout << " used " << makeStdString(inventoryItem["itemname"]);
+    std::string tempOutputString = " used " + makeStdString(inventoryItem["itemname"]);
+    printw(tempOutputString.data());
     removeItem(playerUsableItemsArray_[invIndex], (1));
     return;
 }

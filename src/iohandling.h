@@ -1,6 +1,8 @@
 #ifndef IOHANDLING_H
 #define IOHANDLING_H
 #include "globals.h"
+#include "terminalmanip.h"
+#include <curses.h>
 #include <iostream>
 #include <limits>
 #include <QCoreApplication>
@@ -13,9 +15,8 @@
 #include <QString>
 
 //functions
-int inputErrorNag(int a);
-char inputErrorNag(char a);
-std::string inputErrorNag(std::string a);
+int inputErrorNagInt();
+char inputErrorNagChar();
 
 QString askInput(const std::string &a);
 

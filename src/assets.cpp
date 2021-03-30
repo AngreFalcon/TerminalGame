@@ -57,27 +57,27 @@ void Assets::addNewSpecies(const QString &playerSpecies){
 
 //functions used to delete assets defined here
 bool Assets::removeSpecies(){
-    std::string deleteSpeciesValidation;
-    std::cout << "\nAre you sure you want to remove a species?\nThis cannot be undone. Y/N\n";
-    std::cin >> deleteSpeciesValidation;
-    deleteSpeciesValidation = inputErrorNag(deleteSpeciesValidation);
-    if (tolower(deleteSpeciesValidation[0]) == 'y'){
+    char deleteSpeciesValidation;
+    printw("\nAre you sure you want to remove a species?\nThis cannot be undone. Y/N\n");
+    flushinp();
+    deleteSpeciesValidation = inputErrorNagChar();
+    if (tolower(deleteSpeciesValidation) == 'y'){
         speciesMap_.remove(askInput("\nPlease enter the species name you'd like to delete.\n").toLower());
         ioSaveFile("/assets/species.json", "\nCouldn't load species. Double check your assets before playing.\n", speciesMap_);
     }
-    else std::cout << "\nCanceled. Returning to menu.\n";
+    else printw("\nCanceled. Returning to menu.\n");
     return false;
 }
 
 bool Assets::removeCharacter(){
-    std::string deleteCharacterValidation;
-    std::cout << "\nAre you sure you want to delete a character?\nThis cannot be undone. Y/N\n";
-    std::cin >> deleteCharacterValidation;
-    deleteCharacterValidation = inputErrorNag(deleteCharacterValidation);
-    if (tolower(deleteCharacterValidation[0]) == 'y'){
+    char deleteCharacterValidation;
+    printw("\nAre you sure you want to delete a character?\nThis cannot be undone. Y/N\n");
+    flushinp();
+    deleteCharacterValidation = inputErrorNagChar();
+    if (tolower(deleteCharacterValidation) == 'y'){
         ioRemoveFile("/saves/" + askInput("\nPlease enter the character name you'd like to delete.\n") + ".json", "\nErased save file.\n");
     }
-    else std::cout << "\nCanceled. Returning to menu.\n";
+    else printw("\nCanceled. Returning to menu.\n");
     return false;
 }
 

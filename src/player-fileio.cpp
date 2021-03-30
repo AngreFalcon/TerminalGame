@@ -55,7 +55,6 @@ void Player::saveParty(){
     return;
 }
 
-
 QJsonObject Player::writeSaveFile(){
     //create temporary json container and store player information to to
     QJsonObject playerObject;
