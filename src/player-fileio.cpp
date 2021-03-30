@@ -59,9 +59,9 @@ void Player::saveParty(){
 QJsonObject Player::writeSaveFile(){
     //create temporary json container and store player information to to
     QJsonObject playerObject;
-    playerObject["playername"] = characterName_;
-    playerObject["playerspecies"] = characterSpecies_;
-    playerObject["playerlevel"] = characterLevel_;
+    playerObject["name"] = characterName_;
+    playerObject["species"] = characterSpecies_;
+    playerObject["level"] = characterLevel_;
     playerInventory_.inventoryWriteSaveData(characterName_);
 
     //iterate through list of party member IDs and save them to json array in player's save file
@@ -86,9 +86,9 @@ QJsonObject Player::writeSaveFile(){
     }
 
     //save second temporary json container to our parent json object
-    playerObject["partymemberids"] = playerPartyMembers;
-    playerObject["playerstats"] = playerStatsObject;
-    playerObject["playerequippeditems"] = equippedItemsObject;
+    playerObject["memberids"] = playerPartyMembers;
+    playerObject["stats"] = playerStatsObject;
+    playerObject["equippeditems"] = equippedItemsObject;
 
     //save initial temporary json object to our permanent player json container for writing to file
     return playerObject;
@@ -96,19 +96,19 @@ QJsonObject Player::writeSaveFile(){
 
 void Player::readSaveFile(const QJsonObject &json){
     //read contents of player object from save file
-    characterName_ = json["playername"].toString();
-    characterSpecies_ = json["playerspecies"].toString();
-    characterLevel_ = json["playerlevel"].toInt();
+    characterName_ = json["name"].toString();
+    characterSpecies_ = json["species"].toString();
+    characterLevel_ = json["level"].toInt();
     playerInventory_.inventoryReadSaveData(characterName_);
 
-    QJsonArray playerPartyMembers = json["partymemberids"].toArray();
+    QJsonArray playerPartyMembers = json["memberids"].toArray();
     for (int i = 0; i < playerPartyMembers.size(); i++){
         if (i == 3) break;
         partyKeys_[i] = playerPartyMembers[i].toString();
     }
 
     //after reading in all contents of player object, move on to player stats object contained within player object
-    QJsonObject playerStatsObject = json["playerstats"].toObject();
+    QJsonObject playerStatsObject = json["stats"].toObject();
     QJsonObject::const_iterator i;
     for (i = playerStatsObject.constBegin(); i != playerStatsObject.constEnd(); i++){
         QString statKey = i.key();
@@ -116,7 +116,7 @@ void Player::readSaveFile(const QJsonObject &json){
     }
 
     //check to ensure that equipped items are valid and of correct type for each equip slot, and if not, equip nothing to slot
-    QJsonObject equippedItemsObject = json["playerequippeditems"].toObject();
+    QJsonObject equippedItemsObject = json["equippeditems"].toObject();
     for (i = equippedItemsObject.constBegin(); i != equippedItemsObject.constEnd(); i++){
         QString attributeKey = i.key();
         if (assetData->validateEquippedItems(equippedItemsObject[attributeKey].toString()).toStdString() != attributeKey.toStdString()) characterEquippedItems_[attributeKey] = "null";
