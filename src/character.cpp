@@ -23,7 +23,6 @@ void Character::equipItem(Inventory &playerInventory_){
     printw("\nChoose item to equip.\n");
     if (playerInventory_.printUsableItems("equippable")){
         printw("\n");
-        flushinp();
         userInput = inputErrorNagInt() - 49;
         if (userInput < 0){
             printw("\nDidn't equip anything.");
@@ -46,7 +45,6 @@ void Character::unequipItem(Inventory &playerInventory_){
     printw("\nChoose item to unequip.");
     printCharacterEquippedItems();
     printw("\nEnter 0 to cancel.\n\n");
-    flushinp();
     userInput = inputErrorNagInt() - 49;
     if (userInput == -1){
         printw("\nDidn't unequip anything.");
@@ -75,7 +73,6 @@ void Character::useItem(Inventory &playerInventory_){
     printw("\nChoose item to use.");
     if (playerInventory_.printUsableItems("consumable")){
         printw("\n\n");
-        flushinp();
         userInput = inputErrorNagInt() - 49;
         if (userInput < 0){
             printw("\nDidn't use anything.");

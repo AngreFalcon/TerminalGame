@@ -37,13 +37,13 @@ void initializeStates(){
 }
 
 bool mainMenu(){
-    printw("\n\n-------");
-    printw("\n1: New Game");
-    printw("\n2: Load Game");
-    printw("\n3: Reload Assets");
-    printw("\n4: Remove Species");
-    printw("\n5: Erase Character");
-    printw("\n0: Quit Game\n");
+    printw("\n\n--------\n"
+               "1: New Game\n"
+               "2: Load Game\n"
+               "3: Reload Assets\n"
+               "4: Remove Species\n"
+               "5: Erase Character\n"
+               "0: Quit Game\n");
     stateManager.menuInput = inputErrorNagInt();
     switch(stateManager.menuInput){
         case '1':
@@ -89,15 +89,13 @@ void mainMenuExit(){
 }
 
 bool gameMenu(){
-    printw("\n\n-------");
-    printw("\n1: Equip Item");
-    printw("\n2: Unequip Item");
-    printw("\n3: Use Item");
-    printw("\n4: Save Game");
-    printw("\n5: Show Additional Options");
-    printw("\n0: Exit");
-    printw("\n");
-    flushinp();
+    printw("\n\n--------\n"
+               "1: Equip Item\n"
+               "2: Unequip Item\n"
+               "3: Use Item\n"
+               "4: Save Game\n"
+               "5: Show Additional Options\n"
+               "0: Exit\n");
     stateManager.menuInput = inputErrorNagInt();
     switch(stateManager.menuInput){
         case '1':
@@ -135,16 +133,14 @@ void gameMenuExit(){
 }
 
 bool extraOptionsMenu(){
-    printw("\n\n-------");
-    printw("\n1: Print Character Info");
-    printw("\n2: Print Player Inventory");
-    printw("\n3: Print Party Info");
-    printw("\n4: Print Item List");
-    printw("\n5: Print Species List");
-    printw("\n6: Print Species Descriptors");
-    printw("\n0: Return");
-    printw("\n");
-    flushinp();
+    printw("\n\n--------\n"
+               "1: Print Character Info\n"
+               "2: Print Player Inventory\n"
+               "3: Print Party Inf\n"
+               "4: Print Item List\n"
+               "5: Print Species List\n"
+               "6: Print Species Descriptors\n"
+               "0: Return\n");
     stateManager.menuInput = inputErrorNagInt();
     switch(stateManager.menuInput){
         case '1':
@@ -189,10 +185,8 @@ void extraOptionsMenuExit(){
 }
 
 bool partyOptionsMenu(){
-    printw("\n\n-------");
-    printw("\n0: Return");
-    printw("\n");
-    flushinp();
+    printw("\n\n--------\n"
+               "0: Return\n");
     stateManager.menuInput = inputErrorNagInt();
     switch(stateManager.menuInput){
         case '0':

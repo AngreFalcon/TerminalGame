@@ -1,6 +1,6 @@
 #include "globals.h"
 
-const bool DEBUG = true; //used to enable verbose logging to terminal; eventually this value may be initialized via a settings file
+const bool DEBUG = false; //used to enable verbose logging to terminal; eventually this value may be initialized via a settings file
 
 //window buffer width and height must be at least 1 greater than window width and height or resizing will fail
 //buffer height is 10x larger than window height to allow the console to retain some output history
@@ -11,4 +11,3 @@ const short int BUFFERHEIGHT = WINDOWHEIGHT * 10; //these values will not be mod
 
 Assets *assetData;
 Player *playerCharacter;
-

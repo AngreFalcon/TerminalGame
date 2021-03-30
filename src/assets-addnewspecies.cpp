@@ -12,7 +12,6 @@ QJsonObject Assets::designSpecies(const QString &playerSpecies){
         designSpeciesName(speciesContainerObject, userStringInput);
         speciesContainerObject["stats"] = designSpeciesStats();
         speciesContainerObject["features"] = designSpeciesFeatures();
-
         verifySpecies = designSpeciesConfirmation(speciesContainerObject);
     }
     speciesMap_[playerSpecies] = speciesContainerObject;
@@ -21,14 +20,13 @@ QJsonObject Assets::designSpecies(const QString &playerSpecies){
 
 void Assets::designSpeciesName(QJsonObject &speciesContainerObject, QString &userStringInput){
     speciesContainerObject["name"] = userStringInput;
-    userStringInput = askInput("Please decide what the plural for your species name is.\n");
+    userStringInput = askInput("Please decide what the plural for your species name (" + makeStdString(userStringInput) + ") is.\n");
     speciesContainerObject["pluralname"] = userStringInput;
 
     std::string tempOutputString = "\nAnd enter a description for your species (" + makeStdString(speciesContainerObject["name"]) + "). Press enter to finish writing.\n----------------------------------------------------------------------";
     for (int i = 0; i < userStringInput.size(); i++) tempOutputString += "-";
     tempOutputString += "\n";
     QString speciesDescription = askInput(tempOutputString);
-
     speciesContainerObject["description"] = speciesDescription;
 
     return;
@@ -63,13 +61,11 @@ QJsonObject Assets::designSpeciesStats(){
 }
 
 int Assets::designSpeciesStatsNag(const QString &statKey, int statPoints, int modifier){
-    flushinp();
-    int userInput = inputErrorNagInt();
+    int userInput = inputErrorNagMultiInt();
+    std::string tempOutputString = "\nPlease choose a valid number of " + statKey.toStdString() + " points.\n";
     while (userInput < 1 || userInput > statPoints - modifier){
-        std::string tempOutputString = "\nPlease choose a valid number of " + statKey.toStdString() + " points.\n";
         printw(tempOutputString.data());
-        flushinp();
-        userInput = inputErrorNagInt();
+        userInput = inputErrorNagMultiInt();
     }
     return userInput;
 }
@@ -87,12 +83,11 @@ QJsonObject Assets::designSpeciesFeatures(){
         printw(tempOutputString.data());
         j++;
     }
-    flushinp();
-    j = inputErrorNagInt();
+    j = inputErrorNagInt() - 49;
 
-    featuresObject["speciessingular"] = descriptorsMap_[descriptorsList[j-1]].toObject()["singular"];
-    featuresObject["speciesplural"] = descriptorsMap_[descriptorsList[j-1]].toObject()["plural"];
-    featuresObject["speciesadjective"] = descriptorsMap_[descriptorsList[j-1]].toObject()["adjective"];
+    featuresObject["speciessingular"] = descriptorsMap_[descriptorsList[j]].toObject()["singular"];
+    featuresObject["speciesplural"] = descriptorsMap_[descriptorsList[j]].toObject()["plural"];
+    featuresObject["speciesadjective"] = descriptorsMap_[descriptorsList[j]].toObject()["adjective"];
 
     printw("\nAnd which of these does your species feature?\n");
     for (j = 0; j != mawDescriptorsMap_.size(); j++){
@@ -100,9 +95,8 @@ QJsonObject Assets::designSpeciesFeatures(){
         tempOutputString = std::to_string(j+1) + ": " + tempString.toStdString() + "\n";
         printw(tempOutputString.data());
     }
-    flushinp();
-    j = inputErrorNagInt();
-    featuresObject["mouth"] = mawDescriptorsMap_[j-1];
+    j = inputErrorNagInt() - 49;
+    featuresObject["mouth"] = mawDescriptorsMap_[j];
 
     return featuresObject;
 }
@@ -114,7 +108,6 @@ char Assets::designSpeciesConfirmation(const QJsonObject &speciesObject){
     tempOutputString = isPlural(featuresObject["speciesplural"].toString(), "distinguish", "distinguishes") + " you from other inhabitants of the realm, and adorning your face is a " + makeStdString(featuresObject["mouth"], 1) + ".";
     printw(tempOutputString.data());
     printw("\n\nIs that alright? Y/N\n");
-    flushinp();
     char verifySpecies = inputErrorNagChar();
     verifySpecies = toupper(verifySpecies);
     return verifySpecies;

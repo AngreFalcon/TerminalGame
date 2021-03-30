@@ -8,9 +8,24 @@ int inputErrorNagInt(){
         printw("\n---------------------\nYour input is invalid\n");
         flushinp();
     }
-    clearTerm();
-    flushinp();
     return a;
+}
+
+int inputErrorNagMultiInt(){
+    QString integerArray;
+    char a;
+    nocbreak();
+    echo();
+    while ((a = getch()) != '\n'){
+        if (isdigit(a)){
+            integerArray.push_back(a);
+        }
+    }
+    cbreak();
+    int i;
+    if (integerArray.size() > 0) i = integerArray.toInt();
+    else i = 0;
+    return i;
 }
 
 char inputErrorNagChar(){
@@ -19,36 +34,28 @@ char inputErrorNagChar(){
         printw("\n---------------------\nYour input is invalid\n");
         flushinp();
     }
-    flushinp();
     return a;
 }
 
 QString askInput(const std::string &a){
-    bool retryInput;
-    std::string tempUserValue;
-    std::string tempOutputString;
-    char verify;
-    do {
+    bool retryInput = true;
+    std::string tempUserValue, tempOutputString;
+    char userInput = ' ';
+    while (retryInput == true){
         printw(a.data());
-        nocbreak();
-        echo();
-        while((verify = getch()) != '\n'){
-            tempUserValue.push_back(char(verify));
+        nocbreak(); echo();
+        while((userInput = getch()) != '\n'){
+            tempUserValue.push_back(userInput);
         }
+        cbreak(); noecho();
         tempOutputString = "Is " + tempUserValue + " correct? Y/N\n";
-        printw(tempOutputString.data());
-        cbreak();
-        noecho();
-        verify = inputErrorNagChar();
-        if (toupper(verify) == 'Y'){
-            retryInput = false;
-        }
-        else {
-            retryInput = true;
-            tempUserValue = "";
-            refresh();
-        }
-    } while (retryInput == true);
+        do {
+            printw(tempOutputString.data());
+            userInput = inputErrorNagChar();
+            if (toupper(userInput) == 'Y') retryInput = false;
+            else refresh();
+        } while (toupper(userInput) != 'Y' && toupper(userInput) != 'N');
+    }
     return QString::fromStdString(tempUserValue);
 }
 

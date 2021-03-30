@@ -59,7 +59,6 @@ void Assets::addNewSpecies(const QString &playerSpecies){
 bool Assets::removeSpecies(){
     char deleteSpeciesValidation;
     printw("\nAre you sure you want to remove a species?\nThis cannot be undone. Y/N\n");
-    flushinp();
     deleteSpeciesValidation = inputErrorNagChar();
     if (tolower(deleteSpeciesValidation) == 'y'){
         speciesMap_.remove(askInput("\nPlease enter the species name you'd like to delete.\n").toLower());
@@ -72,7 +71,6 @@ bool Assets::removeSpecies(){
 bool Assets::removeCharacter(){
     char deleteCharacterValidation;
     printw("\nAre you sure you want to delete a character?\nThis cannot be undone. Y/N\n");
-    flushinp();
     deleteCharacterValidation = inputErrorNagChar();
     if (tolower(deleteCharacterValidation) == 'y'){
         ioRemoveFile("/saves/" + askInput("\nPlease enter the character name you'd like to delete.\n") + ".json", "\nErased save file.\n");

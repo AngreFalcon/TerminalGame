@@ -16,8 +16,8 @@
 
 //functions
 int inputErrorNagInt();
+int inputErrorNagMultiInt();
 char inputErrorNagChar();
-
 QString askInput(const std::string &a);
 
 std::string isPlural(const QString &pluralString, const std::string &printStringPlural, const std::string &printStringSingular);
