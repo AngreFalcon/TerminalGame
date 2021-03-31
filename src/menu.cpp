@@ -5,10 +5,10 @@ StateManager stateManager;
 void entryPoint(){
     assetData = new Assets;
 
-    //resizeTerminalWindow();
     initializeStates();
     stateManager.setState("main");
     stateManager.mainLoop();
+    endwin();
     return;
 }
 
@@ -44,32 +44,32 @@ bool mainMenu(){
                "4: Remove Species\n"
                "5: Erase Character\n"
                "0: Quit Game\n");
-    stateManager.menuInput = inputErrorNagInt();
+    stateManager.menuInput = inputInt();
     switch(stateManager.menuInput){
-        case '1':
+        case 1:
             //reassign the playersave object so that if a player file is already loaded, we can reset the player attributes
             playerCharacter->newGame();
             stateManager.setState("game");
             break;
-        case '2':
+        case 2:
             playerCharacter->loadGame();
             if (playerCharacter->verifyPlayerName()) stateManager.setState("game");
             break;
-        case '3':
+        case 3:
             //reassigns asset object, reloading all assets from their respective files
             delete assetData;
             assetData = new Assets;
             break;
-        case '4':
+        case 4:
             assetData->removeSpecies();
             break;
-        case '5':
+        case 5:
             assetData->removeCharacter();
             break;
-        case '6':
+        case 6:
             stateManager.setState("extraoptions", true);
             break;
-        case '0':
+        case 0:
             printw("Goodbye.\n");
             return false;
         default:
@@ -96,24 +96,24 @@ bool gameMenu(){
                "4: Save Game\n"
                "5: Show Additional Options\n"
                "0: Exit\n");
-    stateManager.menuInput = inputErrorNagInt();
+    stateManager.menuInput = inputInt();
     switch(stateManager.menuInput){
-        case '1':
+        case 1:
             playerCharacter->equipPartyMember();
             break;
-        case '2':
+        case 2:
             playerCharacter->unequipPartyMember();
             break;
-        case '3':
+        case 3:
             playerCharacter->useItemPartyMember();
             break;
-        case '4':
+        case 4:
             playerCharacter->saveFile();
             break;
-        case '5':
+        case 5:
             stateManager.setState("extraoptions", true);
             break;
-        case '0':
+        case 0:
             stateManager.setState("main");
             break;
         default:
@@ -141,31 +141,31 @@ bool extraOptionsMenu(){
                "5: Print Species List\n"
                "6: Print Species Descriptors\n"
                "0: Return\n");
-    stateManager.menuInput = inputErrorNagInt();
+    stateManager.menuInput = inputInt();
     switch(stateManager.menuInput){
-        case '1':
+        case 1:
             //debugging case for testing file saving and loading to ensure values are correctly stored within class member variables
             playerCharacter->printPartyMemberIndividual();
             break;
-        case '2':
+        case 2:
             playerCharacter->playerInventory_.printPlayerInv();
             break;
-        case '3':
+        case 3:
             playerCharacter->printPartyMemberInfo();
             break;
-        case '4':
+        case 4:
             assetData->printItemList();
             break;
-        case '5':
+        case 5:
             assetData->printSpeciesList();
             break;
-        case '6':
+        case 6:
             assetData->printDescriptorsList();
             break;
-        case '7':
+        case 7:
             stateManager.setState("extraoptions", true);
             break;
-        case '0':
+        case 0:
             stateManager.setState(stateManager.previousStates.last());
             stateManager.previousStates.removeLast();
             break;
@@ -187,9 +187,9 @@ void extraOptionsMenuExit(){
 bool partyOptionsMenu(){
     printw("\n\n--------\n"
                "0: Return\n");
-    stateManager.menuInput = inputErrorNagInt();
+    stateManager.menuInput = inputInt();
     switch(stateManager.menuInput){
-        case '0':
+        case 0:
             stateManager.setState(stateManager.previousStates.last());
             stateManager.previousStates.removeLast();
             break;

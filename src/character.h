@@ -5,6 +5,7 @@
 #include "inventory.h"
 #include "iohandling.h"
 #include <cmath>
+#include <curses.h>
 #include <iomanip>
 #include <iostream>
 #include <QMap>

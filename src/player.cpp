@@ -26,7 +26,7 @@ QString Player::selectPartyMember(const QString &printStatement, bool manageEqui
             printw(tempOutputString.data());
         }
     }
-    i = inputErrorNagInt() - 49;
+    i = inputInt() - 1;
     if (i < 0 || i > tempList.size() - 1) printw("\nYour selection was invalid.\n");
     else return tempList[i].toLower();
     return "null";

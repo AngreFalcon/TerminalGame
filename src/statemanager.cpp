@@ -32,6 +32,7 @@ void StateManager::mainLoop(){
     while (menuLoopBool){
         menuLoopBool = currentState->execute();
     }
+    return;
 }
 
 void StateManager::printPreviousStates(){

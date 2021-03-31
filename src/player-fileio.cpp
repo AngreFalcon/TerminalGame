@@ -1,8 +1,8 @@
 #include "player.h"
 
 void Player::newGame(){
-    characterName_ = askInput("Name your character.\n");
-    characterSpecies_ = askInput("Name your species.\n").toLower();
+    characterName_ = inputString("Name your character.\n");
+    characterSpecies_ = inputString("Name your species.\n").toLower();
     if (!assetData->verifySpecies(characterSpecies_)) assetData->addNewSpecies(characterSpecies_);
     QJsonObject playerStatsObject = assetData->assignPlayerStats(characterSpecies_);
     for (QJsonObject::const_iterator i = playerStatsObject.constBegin(); i != playerStatsObject.constEnd(); i++)
@@ -14,7 +14,7 @@ void Player::newGame(){
 }
 
 void Player::loadGame(){
-    characterName_ = askInput("What is the name of your character?\n");
+    characterName_ = inputString("What is the name of your character?\n");
     createNPCFile();
     loadFile();
     return;

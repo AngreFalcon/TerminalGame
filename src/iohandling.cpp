@@ -1,34 +1,38 @@
 #include "iohandling.h"
 
-//source file containing exclusively input handling, including error checking and input validation
-
-int inputErrorNagInt(){
+//source file containing input handling, including error checking and input validation
+int inputInt(){ //function can only handle single digit integer grabbing. for larger integers, use inputErrorNagMultiInt()
     int a;
     while (!(a = getch()) || !isdigit(a)){
         printw("\n---------------------\nYour input is invalid\n");
         flushinp();
     }
-    return a;
+    return a - 48; // getch() returns ascii value of key entered. subtract 48 from ascii value to get raw integer value
 }
 
-int inputErrorNagMultiInt(){
+int inputMultiInt(){ //function similar to inputErrorNagInt, but can be used for indefinitely long strings of integers
     QString integerArray;
     char a;
-    nocbreak();
-    echo();
     while ((a = getch()) != '\n'){
         if (isdigit(a)){
+            printw(std::to_string(a-48).data());
             integerArray.push_back(a);
         }
+        else if (a == '\x7f'){ // \x7f = ASCII 127 = backspace/delete key
+            int y, x;
+            getyx(stdscr, y, x);
+            mvprintw(y, x-1, " ");
+            move(y, x-1);
+            integerArray.remove((integerArray.length()-1), 1);
+        }
     }
-    cbreak();
     int i;
     if (integerArray.size() > 0) i = integerArray.toInt();
     else i = 0;
     return i;
 }
 
-char inputErrorNagChar(){
+char inputChar(){ //function used to grab single char input from user
     char a;
     while (!(a = getch()) || !isalpha(a)){
         printw("\n---------------------\nYour input is invalid\n");
@@ -37,21 +41,23 @@ char inputErrorNagChar(){
     return a;
 }
 
-QString askInput(const std::string &a){
+QString inputString(const std::string &a){ //function used to grab string input from user
     bool retryInput = true;
     std::string tempUserValue, tempOutputString;
     char userInput = ' ';
     while (retryInput == true){
         printw(a.data());
-        nocbreak(); echo();
+        nocbreak();
+        echo();
         while((userInput = getch()) != '\n'){
             tempUserValue.push_back(userInput);
         }
-        cbreak(); noecho();
+        cbreak();
+        noecho();
         tempOutputString = "Is " + tempUserValue + " correct? Y/N\n";
         do {
             printw(tempOutputString.data());
-            userInput = inputErrorNagChar();
+            userInput = inputChar();
             if (toupper(userInput) == 'Y') retryInput = false;
             else refresh();
         } while (toupper(userInput) != 'Y' && toupper(userInput) != 'N');
@@ -59,12 +65,12 @@ QString askInput(const std::string &a){
     return QString::fromStdString(tempUserValue);
 }
 
-std::string isPlural(const QString &pluralString, const std::string &printStringSingular, const std::string &printStringPlural){
+std::string isPlural(const QString &pluralString, const std::string &printStringSingular, const std::string &printStringPlural){ //this function is used to check context of a print statement and return either a singular or plural word
     if (pluralString.endsWith("s")) return " " + printStringSingular;
     else return " " + printStringPlural;
 }
 
-std::string makeStdString(const QJsonValue &input, int caseType){
+std::string makeStdString(const QJsonValue &input, int caseType){ //function used to simply cast a QString to a string
     if (caseType == 0) return input.toString().toStdString();
     else if (caseType == 1) return input.toString().toLower().toStdString();
     else if (caseType == 2) return input.toString().toUpper().toStdString();
@@ -108,6 +114,19 @@ QJsonObject ioLoadFile(const QString &fileLocation, const QString &terminalOutpu
     return loadDoc.object();
 }
 
+bool ioCreateFile(const QString &fileLocation){
+    QFile saveFile(QCoreApplication::applicationDirPath() + fileLocation);
+    if (saveFile.open(QIODevice::NewOnly)){
+        QJsonObject emptyObject;
+        QJsonDocument saveDoc(emptyObject);
+        saveFile.write(saveDoc.toJson());
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 void ioRemoveFile(const QString &fileLocation, const QString &terminalOutput){
     QFile removeFile(QCoreApplication::applicationDirPath() + fileLocation);
     if (!removeFile.open(QIODevice::ReadOnly)){
@@ -116,6 +135,14 @@ void ioRemoveFile(const QString &fileLocation, const QString &terminalOutput){
     else{
         removeFile.remove();
         std::string tempOutputString = terminalOutput.toStdString(); printw(tempOutputString.data());
+    }
+    return;
+}
+
+void printKeyInput(){
+    char a;
+    while ((a = getch()) != 48){
+        printw(std::to_string(a).data());
     }
     return;
 }

@@ -5,6 +5,7 @@
 #include "iohandling.h"
 #include "character.h"
 #include "nonplayerchar.h"
+#include <curses.h>
 #include <QJsonObject>
 #include <QMap>
 

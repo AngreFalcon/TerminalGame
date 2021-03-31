@@ -2,6 +2,7 @@
 #define INVENTORY_H
 #include "assets.h"
 #include "globals.h"
+#include <curses.h>
 #include <iomanip>
 #include <iostream>
 #include <QJsonObject>

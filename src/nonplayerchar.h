@@ -1,7 +1,7 @@
 #ifndef NONPLAYERCHAR_H
 #define NONPLAYERCHAR_H
-
 #include "character.h"
+#include <curses.h>
 
 class NonPlayerChar : public Character {
 public:

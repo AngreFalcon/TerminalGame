@@ -6,7 +6,7 @@ Assets::Assets(){
     descriptorsMap_ = {};
     mawDescriptorsMap_ = QStringList();
     loadItemData();
-    createSpeciesFile();
+    ioCreateFile("/assets/species.json");
     loadSpeciesData();
     loadSpeciesDescriptors();
 }
@@ -34,20 +34,6 @@ void Assets::loadSpeciesDescriptors(){
 
 
 //functions used to create new assets defined here
-bool Assets::createSpeciesFile(){
-    QString fileLocation = QCoreApplication::applicationDirPath() + "/assets/species.json";
-    QFile saveFile(fileLocation);
-    if (saveFile.open(QIODevice::NewOnly)){
-        QJsonObject emptyObject;
-        QJsonDocument saveDoc(emptyObject);
-        saveFile.write(saveDoc.toJson());
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-
 void Assets::addNewSpecies(const QString &playerSpecies){
     QJsonObject writeObject = designSpecies(playerSpecies);
     ioSaveFile("/assets/species.json", "\nCouldn't load species. Double check your assets before playing.\n", writeObject);
@@ -59,9 +45,9 @@ void Assets::addNewSpecies(const QString &playerSpecies){
 bool Assets::removeSpecies(){
     char deleteSpeciesValidation;
     printw("\nAre you sure you want to remove a species?\nThis cannot be undone. Y/N\n");
-    deleteSpeciesValidation = inputErrorNagChar();
+    deleteSpeciesValidation = inputChar();
     if (tolower(deleteSpeciesValidation) == 'y'){
-        speciesMap_.remove(askInput("\nPlease enter the species name you'd like to delete.\n").toLower());
+        speciesMap_.remove(inputString("\nPlease enter the species name you'd like to delete.\n").toLower());
         ioSaveFile("/assets/species.json", "\nCouldn't load species. Double check your assets before playing.\n", speciesMap_);
     }
     else printw("\nCanceled. Returning to menu.\n");
@@ -71,9 +57,9 @@ bool Assets::removeSpecies(){
 bool Assets::removeCharacter(){
     char deleteCharacterValidation;
     printw("\nAre you sure you want to delete a character?\nThis cannot be undone. Y/N\n");
-    deleteCharacterValidation = inputErrorNagChar();
+    deleteCharacterValidation = inputChar();
     if (tolower(deleteCharacterValidation) == 'y'){
-        ioRemoveFile("/saves/" + askInput("\nPlease enter the character name you'd like to delete.\n") + ".json", "\nErased save file.\n");
+        ioRemoveFile("/saves/" + inputString("\nPlease enter the character name you'd like to delete.\n") + ".json", "\nErased save file.\n");
     }
     else printw("\nCanceled. Returning to menu.\n");
     return false;

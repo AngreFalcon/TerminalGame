@@ -20,13 +20,13 @@ QJsonObject Assets::designSpecies(const QString &playerSpecies){
 
 void Assets::designSpeciesName(QJsonObject &speciesContainerObject, QString &userStringInput){
     speciesContainerObject["name"] = userStringInput;
-    userStringInput = askInput("Please decide what the plural for your species name (" + makeStdString(userStringInput) + ") is.\n");
+    userStringInput = inputString("Please decide what the plural for your species name (" + makeStdString(userStringInput) + ") is.\n");
     speciesContainerObject["pluralname"] = userStringInput;
 
     std::string tempOutputString = "\nAnd enter a description for your species (" + makeStdString(speciesContainerObject["name"]) + "). Press enter to finish writing.\n----------------------------------------------------------------------";
     for (int i = 0; i < userStringInput.size(); i++) tempOutputString += "-";
     tempOutputString += "\n";
-    QString speciesDescription = askInput(tempOutputString);
+    QString speciesDescription = inputString(tempOutputString);
     speciesContainerObject["description"] = speciesDescription;
 
     return;
@@ -61,11 +61,11 @@ QJsonObject Assets::designSpeciesStats(){
 }
 
 int Assets::designSpeciesStatsNag(const QString &statKey, int statPoints, int modifier){
-    int userInput = inputErrorNagMultiInt();
+    int userInput = inputMultiInt();
     std::string tempOutputString = "\nPlease choose a valid number of " + statKey.toStdString() + " points.\n";
     while (userInput < 1 || userInput > statPoints - modifier){
         printw(tempOutputString.data());
-        userInput = inputErrorNagMultiInt();
+        userInput = inputMultiInt();
     }
     return userInput;
 }
@@ -83,7 +83,7 @@ QJsonObject Assets::designSpeciesFeatures(){
         printw(tempOutputString.data());
         j++;
     }
-    j = inputErrorNagInt() - 49;
+    j = inputInt() - 1;
 
     featuresObject["speciessingular"] = descriptorsMap_[descriptorsList[j]].toObject()["singular"];
     featuresObject["speciesplural"] = descriptorsMap_[descriptorsList[j]].toObject()["plural"];
@@ -95,7 +95,7 @@ QJsonObject Assets::designSpeciesFeatures(){
         tempOutputString = std::to_string(j+1) + ": " + tempString.toStdString() + "\n";
         printw(tempOutputString.data());
     }
-    j = inputErrorNagInt() - 49;
+    j = inputInt() - 1;
     featuresObject["mouth"] = mawDescriptorsMap_[j];
 
     return featuresObject;
@@ -108,7 +108,7 @@ char Assets::designSpeciesConfirmation(const QJsonObject &speciesObject){
     tempOutputString = isPlural(featuresObject["speciesplural"].toString(), "distinguish", "distinguishes") + " you from other inhabitants of the realm, and adorning your face is a " + makeStdString(featuresObject["mouth"], 1) + ".";
     printw(tempOutputString.data());
     printw("\n\nIs that alright? Y/N\n");
-    char verifySpecies = inputErrorNagChar();
+    char verifySpecies = inputChar();
     verifySpecies = toupper(verifySpecies);
     return verifySpecies;
 }

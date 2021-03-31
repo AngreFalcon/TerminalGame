@@ -22,7 +22,6 @@ public:
     void loadSpeciesDescriptors();
 
     //creation functions
-    bool createSpeciesFile();
     void addNewSpecies(const QString &playerSpecies);
 
     //deletion functions
